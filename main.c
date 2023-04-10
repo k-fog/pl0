@@ -7,12 +7,12 @@ int main(int argc, char *argv[]) {
     }
 
     Token *tok = tokenize(argv[1]);
-    view_tokens(tok);
+    // view_tokens(tok);
 
 	Node *node = parse(tok);
-	view_ast(node);
+	// view_ast(node);
 
-	printf("%ld\n", eval(node));
+	printf("%s = %ld\n", argv[1], eval(node));
 
     return 0;
 }
