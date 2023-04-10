@@ -1,5 +1,7 @@
 #include "pl0.h"
 
+Token *current_token;
+
 Token *new_token(TokenType type, Token *cur, char *str, int len) {
     Token *tok = calloc(1, sizeof(Token));
     tok->type = type;
@@ -40,8 +42,14 @@ Token *tokenize(char *src) {
             src += 2;
             continue;
         }
-        if (strchr("+-*/=()<>", *src)) {
+        if (strchr("+-*/=<>", *src)) {
             cur = new_token(TK_OP, cur, src++, 1);
+            continue;
+        }
+
+		// punctuator
+        if (strchr("()", *src)) {
+            cur = new_token(TK_PUNCT, cur, src++, 1);
             continue;
         }
 
@@ -66,6 +74,7 @@ static char *to_string(char *s, int len) {
 }
 
 void view_tokens(Token *tok) {
+	printf("===== TOKENIZED =====\n");
     for (;;) {
         switch (tok->type) {
             case TK_IDENT:
@@ -74,26 +83,27 @@ void view_tokens(Token *tok) {
             case TK_OP:
                 printf("operator: {str: \"%s\", len: %d}\n", to_string(tok->str, tok->len), tok->len);
                 break;
+            case TK_PUNCT:
+                printf("punctuator: {str: \"%s\", len: %d}\n", to_string(tok->str, tok->len), tok->len);
+                break;
             case TK_NUM:
                 printf("num: {val: %ld, len: %d}\n", tok->val, tok->len);
                 break;
             case TK_EOF:
-                printf("end of file\n");
+                printf("EOF\n\n");
                 return;
         }
         tok = tok->next;
     }
 }
 
-Token *token; // current token
-
 Token *peek() {
-    return token;
+    return current_token;
 }
 
 Token *read() {
-    Token *t = token;
-    token = token->next;
+    Token *t = current_token;
+    current_token = current_token->next;
     return t;
 }
 
