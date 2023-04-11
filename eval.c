@@ -1,6 +1,7 @@
 #include "pl0.h"
 
 long eval(Node *node) {
+	while (node->next != NULL) node = node->next;
 	switch (node->type) {
 		case ND_NUM:
 			return node->val;
@@ -12,6 +13,16 @@ long eval(Node *node) {
 			return eval(node->lhs) * eval(node->rhs);
 		case ND_DIV:
 			return eval(node->lhs) / eval(node->rhs);
+		case ND_EQ:
+			return eval(node->lhs) == eval(node->rhs);
+		case ND_NE:
+			return eval(node->lhs) != eval(node->rhs);
+		case ND_LT:
+			return eval(node->lhs) < eval(node->rhs);
+		case ND_LE:
+			return eval(node->lhs) <= eval(node->rhs);
+		case ND_ODD:
+			break;
 	}
 	exit(1);
 }

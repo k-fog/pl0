@@ -36,8 +36,7 @@ Token *tokenize(char *src) {
         }
 
         // operator
-        if (startswith(src, "==") || startswith(src, "!=") ||
-            startswith(src, "<=") || startswith(src, ">=")) {
+        if (startswith(src, "<>") || startswith(src, "<=") || startswith(src, ">=")) {
             cur = new_token(TK_OP, cur, src, 2);
             src += 2;
             continue;

@@ -30,6 +30,7 @@
  * Factor    ::= - Factor | LValue | Integer | input | ( Expr )
  */
 
+static Node *test();
 static Node *exprs();
 static Node *expr();
 static Node *sum();
@@ -48,6 +49,12 @@ static Node *new_num(long v) {
 	return node;
 }
 
+static Node *new_unary(NodeType type, Node *p) {
+	Node *node = new_node(type);
+	node->rhs = p;
+	return node;
+}
+
 static Node *new_binary(NodeType type, Node *lhs, Node *rhs) {
 	Node *node = new_node(type);
 	node->lhs = lhs;
@@ -61,6 +68,23 @@ static bool eq_str(Token *t, char *s) {
 
 static bool eq_type(Token *tok, TokenType tt) {
 	return tok->type == tt;
+}
+
+static Node *test() {
+	Node *node;
+	if (eq_str(peek(), "odd")) {
+		node = new_unary(ND_ODD, sum());
+	} else {
+		node = sum();
+		Token *tok = read();
+		if (eq_str(tok, "<=")) node = new_binary(ND_LE, node, sum());
+		else if (eq_str(tok, "<>")) node = new_binary(ND_NE, node, sum());
+		else if (eq_str(tok, "<")) node = new_binary(ND_LT, node, sum());
+		else if (eq_str(tok, ">=")) node = new_binary(ND_LE, sum(), node);
+		else if (eq_str(tok, ">")) node = new_binary(ND_LT, sum(), node);
+		else if (eq_str(tok, "=")) node = new_binary(ND_EQ, node, sum());
+	}
+	return node;
 }
 
 static Node *exprs() {
@@ -101,12 +125,14 @@ static Node *term() {
 }
 
 static Node *factor() {
-	if (eq_type(peek(), TK_IDENT)) {
+	Token *tok = read();
+	if (eq_str(tok, "-")) {
+		return new_binary(ND_SUB, new_num(0), factor());
+	} else if (eq_type(tok, TK_IDENT)) {
 		exit(1);
-	} else if (eq_type(peek(), TK_NUM)) {
-		return new_num(read()->val);
-	} else if (eq_str(peek(), "(")) {
-		read();
+	} else if (eq_type(tok, TK_NUM)) {
+		return new_num(tok->val);
+	} else if (eq_str(tok, "(")) {
 		Node *node = sum();
 		if (!eq_str(read(), ")")) exit(1);
 		return node;
@@ -116,7 +142,8 @@ static Node *factor() {
 
 Node *parse(Token *tok) {
 	current_token = tok;
-	Node *node = exprs();
+	// Node *node = exprs();
+	Node *node = test();
 	if (!eq_type(current_token, TK_EOF)) exit(1);
 	return node;
 }
@@ -131,13 +158,21 @@ static void print_node(Node *node) {
 			case ND_SUB:
 			case ND_MUL:
 			case ND_DIV:
-				char op;
-				if (node->type == ND_ADD) op = '+';
-				else if (node->type == ND_SUB) op = '-';
-				else if (node->type == ND_MUL) op = '*';
-				else if (node->type == ND_DIV) op = '/';
+			case ND_EQ:
+			case ND_NE:
+			case ND_LT:
+			case ND_LE:
+				char *op;
+				if (node->type == ND_ADD) op = "+";
+				else if (node->type == ND_SUB) op = "-";
+				else if (node->type == ND_MUL) op = "*";
+				else if (node->type == ND_DIV) op = "/";
+				else if (node->type == ND_EQ) op = "==";
+				else if (node->type == ND_NE) op = "<>";
+				else if (node->type == ND_LT) op = "<";
+				else if (node->type == ND_LE) op = "<=";
 
-				printf("%c: {", op);
+				printf("%s: {", op);
 				printf("lhs: {");
 				print_node(node->lhs);
 				printf("}, ");
@@ -145,6 +180,8 @@ static void print_node(Node *node) {
 				print_node(node->rhs);
 				printf("}, ");
 				printf("}, ");
+				break;
+			case ND_ODD:
 				break;
 		}
 	}
