@@ -15,6 +15,7 @@
  * Factor    ::= Ident | Number | "(" Expr ")"
  */
 
+static Node *stmt();
 static Node *condition();
 static Node *expr();
 static Node *term();
@@ -51,6 +52,27 @@ static bool eq_str(Token *t, char *s) {
 
 static bool eq_type(Token *tok, TokenType tt) {
 	return tok->type == tt;
+}
+
+static Node *stmt() {
+	Node *node;
+	Token *tok = peek();
+	if (eq_str(tok, "if")) {
+		read();
+		node = new_node(ND_IF);
+		node->condition = condition();
+		if (!eq_str(read(), "then")) exit(1);
+		node->body = stmt();
+	} else if (eq_str(tok, "while")) {
+		read();
+		node = new_node(ND_WHILE);
+		node->condition = condition();
+		if (!eq_str(read(), "do")) exit(1);
+		node->body = stmt();
+	} else {
+		node = expr(); // temporarily
+	}
+	return node;
 }
 
 static Node *condition() {
@@ -120,7 +142,8 @@ static Node *factor() {
 
 Node *parse(Token *tok) {
 	current_token = tok;
-	Node *node = condition();
+	// Node *node = condition();
+	Node *node = stmt();
 	if (!eq_type(current_token, TK_EOF)) exit(1);
 	return node;
 }
@@ -163,7 +186,11 @@ static void print_node(Node *node) {
 			printf("}, ");
 			break;
 		case ND_IF:
-			printf("if: {condition: {");
+		case ND_WHILE:
+			char *kw;
+			if (node->type == ND_IF) kw = "if";
+			else if (node->type == ND_WHILE) kw = "while";
+			printf("%s: {condition: {", kw);
 			print_node(node->condition);
 			printf("}, ");
 			printf("body: {");

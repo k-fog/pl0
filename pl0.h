@@ -33,17 +33,18 @@ Token *read();
 
 // parse
 typedef enum {
-	ND_NUM,  // number
-	ND_ADD,  // +
-	ND_SUB,  // -
-	ND_MUL,  // *
-	ND_DIV,  // /
-	ND_EQ,	 // =
-	ND_LT,   // <
-	ND_LE,   // <=
-	ND_NE,   // <>
-	ND_ODD,  // odd
-	ND_IF,   // if stmt
+	ND_NUM,   // number
+	ND_ADD,   // +
+	ND_SUB,   // -
+	ND_MUL,   // *
+	ND_DIV,   // /
+	ND_EQ,	  // =
+	ND_LT,    // <
+	ND_LE,    // <=
+	ND_NE,    // <>
+	ND_ODD,   // odd
+	ND_IF,    // if statement
+	ND_WHILE, // while statement
 } NodeType;
 
 typedef struct Node Node;
