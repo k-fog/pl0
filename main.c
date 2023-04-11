@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	Node *node = parse(tok);
 	view_ast(node);
 
-	printf("%s = %ld\n", argv[1], eval(node));
+	printf("{%s} = %ld\n", argv[1], eval(node));
 
     return 0;
 }

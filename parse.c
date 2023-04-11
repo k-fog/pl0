@@ -72,11 +72,11 @@ static bool eq_type(Token *tok, TokenType tt) {
 
 static Node *test() {
 	Node *node;
-	if (eq_str(peek(), "odd")) {
+	Token *tok = read();
+	if (eq_str(tok, "odd")) {
 		node = new_unary(ND_ODD, sum());
 	} else {
 		node = sum();
-		Token *tok = read();
 		if (eq_str(tok, "<=")) node = new_binary(ND_LE, node, sum());
 		else if (eq_str(tok, "<>")) node = new_binary(ND_NE, node, sum());
 		else if (eq_str(tok, "<")) node = new_binary(ND_LT, node, sum());
@@ -182,6 +182,9 @@ static void print_node(Node *node) {
 				printf("}, ");
 				break;
 			case ND_ODD:
+				printf("odd: {lhs: null, rhs: {");
+				print_node(node->rhs);
+				printf("}, ");
 				break;
 		}
 	}

@@ -22,7 +22,7 @@ long eval(Node *node) {
 		case ND_LE:
 			return eval(node->lhs) <= eval(node->rhs);
 		case ND_ODD:
-			break;
+			return eval(node->rhs) % 2 == 1;
 	}
 	exit(1);
 }
