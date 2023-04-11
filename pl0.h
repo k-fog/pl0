@@ -45,6 +45,7 @@ struct Node {
 	NodeType type;
 	Node *lhs;
 	Node *rhs;
+	Node *next;
 	long val;
 };
 
