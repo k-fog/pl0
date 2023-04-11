@@ -43,6 +43,7 @@ typedef enum {
 	ND_LE,   // <=
 	ND_NE,   // <>
 	ND_ODD,  // odd
+	ND_IF,   // if stmt
 } NodeType;
 
 typedef struct Node Node;
@@ -50,7 +51,10 @@ struct Node {
 	NodeType type;
 	Node *lhs;
 	Node *rhs;
-	Node *next;
+
+	Node *condition;
+	Node *body;
+
 	long val;
 };
 
