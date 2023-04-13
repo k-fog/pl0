@@ -33,6 +33,12 @@ static Node *new_num(long v) {
 	return node;
 }
 
+static Node *new_ident(Token *tok) {
+	Node *node = new_node(ND_IDENT);
+	node->str = to_string(tok->str, tok->len);
+	return node;
+}
+
 static Node *new_unary(NodeType type, Node *p) {
 	Node *node = new_node(type);
 	node->rhs = p;
@@ -46,7 +52,7 @@ static Node *new_binary(NodeType type, Node *lhs, Node *rhs) {
 	return node;
 }
 
-static bool eq_str(Token *t, char *s) {
+static bool eq(Token *t, char *s) {
 	return t->len == strlen(s) && strncmp(t->str, s, t->len) == 0;
 }
 
@@ -56,56 +62,70 @@ static bool eq_type(Token *tok, TokenType tt) {
 
 static Node *stmt() {
 	Node *node;
-	Token *tok = peek();
-	if (eq_str(tok, "if")) {
+	Token *tok = read();
+	if (eq(tok, "begin")) {
+		Node *head = new_node(ND_BEGIN);
+		node = head->next = stmt();
+		if (!eq(read(), ";")) exit(1);
+		while (!eq(peek(), "end")) {
+			node->next = stmt();
+			if (!eq(read(), ";")) exit(1);
+			node = node->next;
+		}
 		read();
+		return head;
+	} else if (eq(tok, "if")) {
 		node = new_node(ND_IF);
 		node->condition = condition();
-		if (!eq_str(read(), "then")) exit(1);
+		if (!eq(read(), "then")) exit(1);
 		node->body = stmt();
-	} else if (eq_str(tok, "while")) {
-		read();
+	} else if (eq(tok, "while")) {
 		node = new_node(ND_WHILE);
 		node->condition = condition();
-		if (!eq_str(read(), "do")) exit(1);
+		if (!eq(read(), "do")) exit(1);
 		node->body = stmt();
-	} else {
-		node = expr(); // temporarily
+	} else if (eq(tok, "return")) {
+		node = new_node(ND_RET);
+		node->body = expr();
+	}else {
+		node = new_ident(tok);
+		if (!eq(read(), ":=")) exit(1);
+		node = new_binary(ND_ASSG, node, expr());
 	}
 	return node;
 }
 
 static Node *condition() {
 	Node *node;
-	if (eq_str(peek(), "odd")) {
+	if (eq(peek(), "odd")) {
 		read();
 		node = new_unary(ND_ODD, expr());
 	} else {
 		node = expr();
 		Token *tok = read();
-		if (eq_str(tok, "<=")) node = new_binary(ND_LE, node, expr());
-		else if (eq_str(tok, "<>")) node = new_binary(ND_NE, node, expr());
-		else if (eq_str(tok, "<")) node = new_binary(ND_LT, node, expr());
-		else if (eq_str(tok, ">=")) node = new_binary(ND_LE, expr(), node);
-		else if (eq_str(tok, ">")) node = new_binary(ND_LT, expr(), node);
-		else if (eq_str(tok, "=")) node = new_binary(ND_EQ, node, expr());
+		if (eq(tok, "<=")) node = new_binary(ND_LE, node, expr());
+		else if (eq(tok, "<>")) node = new_binary(ND_NE, node, expr());
+		else if (eq(tok, "<")) node = new_binary(ND_LT, node, expr());
+		else if (eq(tok, ">=")) node = new_binary(ND_LE, expr(), node);
+		else if (eq(tok, ">")) node = new_binary(ND_LT, expr(), node);
+		else if (eq(tok, "=")) node = new_binary(ND_EQ, node, expr());
 	}
 	return node;
 }
 
 static Node *expr() {
 	Node *node;
-	if (eq_str(peek(), "+")) {
+	if (eq(peek(), "+")) {
 		read();
 		node = term();
-	} else if (eq_str(peek(), "-")) {
+	} else if (eq(peek(), "-")) {
 		read();
 		node = new_binary(ND_SUB, new_num(0), term());
 	} else
 		node = term();
 
-	while (eq_str(peek(), "+") || eq_str(peek(), "-")) {
-		if (eq_str(read(), "+"))
+	while (eq(peek(), "+") || eq(peek(), "-")) {
+		if (eq(read(), "+"))
 			node = new_binary(ND_ADD, node, term());
 		else // "-"
 			node = new_binary(ND_SUB, node, term());
@@ -115,8 +135,8 @@ static Node *expr() {
 
 static Node *term() {
 	Node *node = factor();
-	while (eq_str(peek(), "*") || eq_str(peek(), "/")) {
-		if (eq_str(read(), "*"))
+	while (eq(peek(), "*") || eq(peek(), "/")) {
+		if (eq(read(), "*"))
 			node = new_binary(ND_MUL, node, factor());
 		else // "/"
 			node = new_binary(ND_DIV, node, factor());
@@ -127,14 +147,14 @@ static Node *term() {
 static Node *factor() {
 	Token *tok = read();
 	if (eq_type(tok, TK_IDENT)) {
-		exit(1);
-	} else if (eq_str(tok, "-")) {
+		return new_ident(tok);
+	} else if (eq(tok, "-")) {
 		return new_binary(ND_SUB, new_num(0), factor());
 	} else if (eq_type(tok, TK_NUM)) {
 		return new_num(tok->val);
-	} else if (eq_str(tok, "(")) {
+	} else if (eq(tok, "(")) {
 		Node *node = expr();
-		if (!eq_str(read(), ")")) exit(1);
+		if (!eq(read(), ")")) exit(1);
 		return node;
 	}
 	exit(1);

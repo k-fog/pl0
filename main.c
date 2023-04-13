@@ -10,9 +10,10 @@ int main(int argc, char *argv[]) {
     // view_tokens(tok);
 
 	Node *node = parse(tok);
-	view_ast(node);
+	// view_ast(node);
 
-	printf("{%s} = %ld\n", argv[1], eval(node));
+	Environment *env = new_environment(NULL);
+	printf("{%s} = %ld\n", argv[1], eval(node, env));
 
     return 0;
 }

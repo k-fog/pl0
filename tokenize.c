@@ -36,7 +36,8 @@ Token *tokenize(char *src) {
         }
 
         // operator
-        if (startswith(src, "<>") || startswith(src, "<=") || startswith(src, ">=")) {
+        if (startswith(src, "<>") || startswith(src, "<=") ||
+			startswith(src, ">=") || startswith(src, ":=")) {
             cur = new_token(TK_OP, cur, src, 2);
             src += 2;
             continue;
@@ -47,7 +48,7 @@ Token *tokenize(char *src) {
         }
 
 		// punctuator
-        if (strchr("(),", *src)) {
+        if (strchr("(),;", *src)) {
             cur = new_token(TK_PUNCT, cur, src++, 1);
             continue;
         }
@@ -68,7 +69,7 @@ Token *tokenize(char *src) {
     return head.next;
 }
 
-static char *to_string(char *s, int len) {
+char *to_string(char *s, int len) {
     char *t = malloc(sizeof(char) * (len + 1));
     strncpy(t, s, len);
     return t;
