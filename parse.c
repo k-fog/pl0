@@ -15,6 +15,11 @@
  * Factor    ::= Ident | Number | "(" Expr ")"
  */
 
+static Node *program();
+static Node *block();
+static Node *var_decl();
+static Node *const_decl();
+static Node *func_decl();
 static Node *stmt();
 static Node *condition();
 static Node *expr();
@@ -60,6 +65,57 @@ static bool eq_type(Token *tok, TokenType tt) {
 	return tok->type == tt;
 }
 
+static Node *program() {
+	Node *node = block();
+	if (!eq(read(), ".")) exit(0);
+	return node;
+}
+
+static Node *block() {
+	Node *head = new_node(ND_BLOCK);
+	Node *node = head;
+	for (;;) {
+		if (eq(peek(), "var")) node->next = var_decl();
+		else if (eq(peek(), "const")) node->next = const_decl();
+		else if (eq(peek(), "function")) node->next = func_decl();
+		else break;
+		node = node->next;
+	}
+	node->next = stmt();
+	return head;
+}
+
+static Node *var_decl() {
+	return NULL;
+}
+static Node *const_decl() {
+	return NULL;
+}
+
+static Node *func_decl() {
+	if (!eq(read(), "function")) exit(1);
+	Node *name = new_ident(read());
+	Node *args = new_node(ND_ARGS);	
+	Node *node = args->next;
+	if (!eq(read(), "(")) exit(1);
+	for (;;) {
+		if (eq(peek(), ")")) break;
+		node->next = new_ident(read());
+		node = node->next;
+		if (eq(peek(), ",")) continue;
+		else break;
+	}
+	if (!eq(read(), ")")) exit(1);
+	Node *body = block();
+	if (!eq(read(), ";")) exit(1);
+
+	node = new_node(ND_FNDEF);
+	node->name = name;
+	node->args = args;
+	node->body = body;
+	return node;
+}
+
 static Node *stmt() {
 	Node *node;
 	Token *tok = read();
@@ -87,7 +143,7 @@ static Node *stmt() {
 	} else if (eq(tok, "return")) {
 		node = new_node(ND_RET);
 		node->body = expr();
-	}else {
+	} else {
 		node = new_ident(tok);
 		if (!eq(read(), ":=")) exit(1);
 		node = new_binary(ND_ASSG, node, expr());
@@ -147,6 +203,13 @@ static Node *term() {
 static Node *factor() {
 	Token *tok = read();
 	if (eq_type(tok, TK_IDENT)) {
+		if (eq(peek(), "(")) {
+			read();
+			if (!eq(read(), ")")) exit(1);
+			Node *node = new_node(ND_FNCALL);
+			node->name = new_ident(tok);
+			return node;
+		}
 		return new_ident(tok);
 	} else if (eq(tok, "-")) {
 		return new_binary(ND_SUB, new_num(0), factor());
@@ -163,11 +226,12 @@ static Node *factor() {
 Node *parse(Token *tok) {
 	current_token = tok;
 	// Node *node = condition();
-	Node *node = stmt();
+	Node *node = program();
 	if (!eq_type(current_token, TK_EOF)) exit(1);
 	return node;
 }
 
+/*
 static void print_node(Node *node) {
 	switch (node->type) {
 		case ND_NUM:
@@ -221,10 +285,13 @@ static void print_node(Node *node) {
 	}
 	return;
 }
+*/
 
+/*
 void view_ast(Node *node) {
 	printf("===== PARSED =====\n");
 	print_node(node);
 	printf("\n");
 	return;
 }
+*/

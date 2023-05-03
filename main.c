@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
 	Node *node = parse(tok);
 	// view_ast(node);
 
-	Environment *env = new_environment(NULL);
-	printf("{%s} = %ld\n", argv[1], eval(node, env));
+	Env *env = new_env(NULL);
+	printf("{%s} = %ld\n", argv[1], eval(node, env)->val.intnum);
 
     return 0;
 }

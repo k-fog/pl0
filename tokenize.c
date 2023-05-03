@@ -48,7 +48,7 @@ Token *tokenize(char *src) {
         }
 
 		// punctuator
-        if (strchr("(),;", *src)) {
+        if (strchr("(),;.", *src)) {
             cur = new_token(TK_PUNCT, cur, src++, 1);
             continue;
         }

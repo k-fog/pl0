@@ -50,6 +50,10 @@ typedef enum {
 	ND_RET,   // return
 	ND_ASSG,  // assignment
 	ND_BEGIN, // begin ... end
+	ND_FNDEF, // function
+	ND_ARGS,  // args
+	ND_FNCALL,// function call 
+	ND_BLOCK, // block
 } NodeType;
 
 typedef struct Node Node;
@@ -63,6 +67,9 @@ struct Node {
 	
 	Node *next;
 
+	Node *name;
+	Node *args;
+
 	long val;
 	char *str;
 };
@@ -71,10 +78,27 @@ Node *parse(Token *tok);
 void view_ast(Node *node);
 
 
-// hashmap
+// data type & hashmap
+
+typedef enum {
+	P_INT,
+	P_FUNC,
+} pType;
+
+typedef struct pVal {
+	pType type;
+	union {
+		long int intnum;
+		Node *func;
+	} val;
+} pVal;
+
+pVal *pInt(long int x);
+pVal *pFunc(Node *func);
+
 typedef struct {
 	char *key;
-	long val;
+	pVal *val;
 } Pair;
 
 typedef struct {
@@ -83,18 +107,19 @@ typedef struct {
 } Hashmap;
 
 Hashmap *new_hashmap(int size);
+Pair *new_pair(char *key, pVal *val);
 void add2map(Hashmap *map, Pair *pair);
-long get_from_map(Hashmap *map, char *key);
+pVal *get_from_map(Hashmap *map, char *key);
 bool haskey(Hashmap *map, char *key);
 
 
 // eval
 #define HASHMAX 89
-typedef struct Environment Environment;
-struct Environment {
-	Environment *outer;
+typedef struct _Env Env;
+struct _Env {
+	Env *outer;
 	Hashmap *var;
 };
 
-Environment *new_environment(Environment *outer);
-long eval(Node *node, Environment *env);
+Env *new_env(Env *outer);
+pVal *eval(Node *node, Env *env);

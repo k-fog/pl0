@@ -7,6 +7,13 @@ Hashmap *new_hashmap(int size) {
 	return map;
 }
 
+Pair *new_pair(char *key, pVal *val) {
+	Pair *p = calloc(1, sizeof(Pair));
+	p->key = key;
+	p->val = val;
+	return p;
+}
+
 static int make_hash(char *str, int hashmax) {
 	int len = strlen(str);
 	int hash = 0;
@@ -36,7 +43,7 @@ void add2map(Hashmap *map, Pair *pair) {
 	return;
 }
 
-long get_from_map(Hashmap *map, char *key) {
+pVal *get_from_map(Hashmap *map, char *key) {
 	int hashval = make_hash(key, map->size);
 	Pair *pair;
 	for (int i = 0; i <= map->size / 2; i++) {
