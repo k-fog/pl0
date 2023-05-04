@@ -68,7 +68,7 @@ pVal *eval(Node *node, Env *env) {
 				return ret;
 			}
 		case ND_RET:
-			return eval(node->body, env);
+			return eval(node->rhs, env);
 		case ND_ASSG:
 			{
 				pVal *pv = eval(node->rhs, env);

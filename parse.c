@@ -141,8 +141,7 @@ static Node *stmt() {
 		if (!eq(read(), "do")) exit(1);
 		node->body = stmt();
 	} else if (eq(tok, "return")) {
-		node = new_node(ND_RET);
-		node->body = expr();
+		node = new_unary(ND_RET, expr());
 	} else {
 		node = new_ident(tok);
 		if (!eq(read(), ":=")) exit(1);
