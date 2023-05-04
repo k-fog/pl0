@@ -54,6 +54,7 @@ typedef enum {
 	ND_ARGS,  // args
 	ND_FNCALL,// function call 
 	ND_BLOCK, // block
+	ND_NULL,  // null
 } NodeType;
 
 typedef struct Node Node;
@@ -109,6 +110,7 @@ typedef struct {
 Hashmap *new_hashmap(int size);
 Pair *new_pair(char *key, pVal *val);
 void add2map(Hashmap *map, Pair *pair);
+void update_map(Hashmap *map, Pair *new_pair);
 pVal *get_from_map(Hashmap *map, char *key);
 bool haskey(Hashmap *map, char *key);
 

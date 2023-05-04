@@ -23,7 +23,8 @@ pVal *pFunc(Node *node) {
 
 static void put(Env *env, char *key, pVal *val) {
 	Pair *p = new_pair(key, val);
-	add2map(env->var, p);
+	if (haskey(env->var, key)) update_map(env->var, p);
+	else add2map(env->var, p);
 	return;
 }
 
@@ -79,7 +80,7 @@ pVal *eval(Node *node, Env *env) {
 		case ND_BLOCK:
 			{
 				Env *inner = new_env(env);
-				node = node->next;
+				node = node->body->next;
 				while (node->next != NULL) {
 					eval(node, inner);
 					node = node->next;

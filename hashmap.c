@@ -43,6 +43,19 @@ void add2map(Hashmap *map, Pair *pair) {
 	return;
 }
 
+void update_map(Hashmap *map, Pair *new_pair) {
+	int hashval = make_hash(new_pair->key, map->size);
+	Pair *pair;
+	for (int i = 0; i <= map->size / 2; i++) {
+		pair = map->data[(hashval + i * i) % map->size];
+		if (pair != NULL && strcmp(new_pair->key, pair->key) == 0) {
+			pair->val = new_pair->val;
+			return;
+		}
+	}
+	exit(1);
+}
+
 pVal *get_from_map(Hashmap *map, char *key) {
 	int hashval = make_hash(key, map->size);
 	Pair *pair;

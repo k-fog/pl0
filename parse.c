@@ -73,7 +73,7 @@ static Node *program() {
 
 static Node *block() {
 	Node *head = new_node(ND_BLOCK);
-	Node *node = head;
+	Node *node = head->body = new_node(ND_NULL);
 	for (;;) {
 		if (eq(peek(), "var")) node->next = var_decl();
 		else if (eq(peek(), "const")) node->next = const_decl();
@@ -81,6 +81,7 @@ static Node *block() {
 		else break;
 		node = node->next;
 	}
+
 	node->next = stmt();
 	return head;
 }
@@ -121,7 +122,8 @@ static Node *stmt() {
 	Token *tok = read();
 	if (eq(tok, "begin")) {
 		Node *head = new_node(ND_BEGIN);
-		node = head->next = stmt();
+		head->body = new_node(ND_NULL);
+		node = head->body->next = stmt();
 		if (!eq(read(), ";")) exit(1);
 		while (!eq(peek(), "end")) {
 			node->next = stmt();
