@@ -7,11 +7,7 @@ int main(int argc, char *argv[]) {
     }
 
     Token *tok = tokenize(argv[1]);
-    // view_tokens(tok);
-
 	Node *node = parse(tok);
-	// view_ast(node);
-
 	Env *env = new_env(NULL);
 	printf("%ld\n", eval(node, env)->val.intnum);
 

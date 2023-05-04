@@ -31,4 +31,4 @@ assert 1 'begin x:=0; begin x:=1; end; return x; end.'
 assert 55 'begin x:=0; i:=0; while i<=10 do begin x:=x+i; i:=i+1; end; return x; end.'
 assert 2 'function f() return 2; return f().'
 
-echo done!
+echo OK!
