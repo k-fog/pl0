@@ -7,7 +7,7 @@ function assert() {
 	if [ "$output" = "$expected" ]; then
 		echo "{$input} => $output"
 	else
-		echo "expected $expected, but got $output"
+		echo "{$input}: expected $expected, but got $output"
 		exit 1
 	fi
 }
@@ -24,5 +24,11 @@ assert 2 'return (1-(1-2)).'
 assert 0 'return (((0))).'
 assert 1 'return - -1.'
 assert 1 'if 1=1 then return 1.'
+assert 1 'begin x:=1; return x; end.'
+assert 3 'begin x:=1; y:=2; return x+y; end.'
+assert 2 'begin x:=1; x:=2; return x; end.'
+assert 1 'begin x:=0; begin x:=1; end; return x; end.'
+assert 55 'begin x:=0; i:=0; while i<=10 do begin x:=x+i; i:=i+1; end; return x; end.'
+assert 2 'function f() return 2; return f().'
 
 echo done!

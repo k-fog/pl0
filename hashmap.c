@@ -43,37 +43,23 @@ void add2map(Hashmap *map, Pair *pair) {
 	return;
 }
 
-void update_map(Hashmap *map, Pair *new_pair) {
-	int hashval = make_hash(new_pair->key, map->size);
-	Pair *pair;
-	for (int i = 0; i <= map->size / 2; i++) {
-		pair = map->data[(hashval + i * i) % map->size];
-		if (pair != NULL && strcmp(new_pair->key, pair->key) == 0) {
-			pair->val = new_pair->val;
-			return;
-		}
-	}
-	exit(1);
-}
-
-pVal *get_from_map(Hashmap *map, char *key) {
+Pair *get_from_map(Hashmap *map, char *key) {
 	int hashval = make_hash(key, map->size);
 	Pair *pair;
 	for (int i = 0; i <= map->size / 2; i++) {
 		pair = map->data[(hashval + i * i) % map->size];
 		if (pair != NULL && strcmp(key, pair->key) == 0)
-			return pair->val;
+			return pair;
 	}
-	exit(1);
+	return NULL;
+}
+
+void update_map(Hashmap *map, Pair *new_pair) {
+	Pair *p = get_from_map(map, new_pair->key);
+	p->val = new_pair->val;
+	return;
 }
 
 bool haskey(Hashmap *map, char *key) {
-	int hashval = make_hash(key, map->size);
-	Pair *pair;
-	for (int i = 0; i <= map->size / 2; i++) {
-		pair = map->data[(hashval + i * i) % map->size];
-		if (pair != NULL && strcmp(key, pair->key) == 0)
-			return true;
-	}
-	return false;
+	return get_from_map(map, key) != NULL;
 }

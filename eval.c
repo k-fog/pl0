@@ -21,18 +21,29 @@ pVal *pFunc(Node *node) {
 	return pv;
 }
 
-static void put(Env *env, char *key, pVal *val) {
-	Pair *p = new_pair(key, val);
-	if (haskey(env->var, key)) update_map(env->var, p);
-	else add2map(env->var, p);
+static void decl_var(Env *env, char *key) {
+	Pair *p = new_pair(key, pInt(0));
+	add2map(env->var, p);
 	return;
 }
 
+static Pair *get_pair(Env *env, char *key) {
+	Pair *ret = get_from_map(env->var, key);
+	if (ret) return ret;
+	else if(!env->outer) return NULL;
+	else return get_from_map(env->outer->var, key);
+}
+
 static pVal *get(Env *env, char *key) {
-	if (haskey(env->var, key))
-		return get_from_map(env->var, key);
-	else
-		return get(env->outer, key);
+	return get_pair(env, key)->val;
+}
+
+static void put(Env *env, char *key, pVal *val) {
+	Pair *np = new_pair(key, val);
+	Pair *op = get_pair(env, key);
+	if (op) op->val = np->val;
+	else add2map(env->var, np);
+	return;
 }
 
 pVal *eval(Node *node, Env *env) {
@@ -65,7 +76,7 @@ pVal *eval(Node *node, Env *env) {
 		case ND_WHILE:
 			{
 				pVal *ret;
-				while (eval(node->condition, env)) ret = eval(node->body, env);
+				while (eval(node->condition, env)->val.intnum) ret = eval(node->body, env);
 				return ret;
 			}
 		case ND_RET:
@@ -91,7 +102,6 @@ pVal *eval(Node *node, Env *env) {
 			{
 				pVal *pv = pFunc(node);
 				put(env, node->name->str, pv);
-				printf("function %s is defined!\n", node->name->str);
 				return pv;
 			}
 		case ND_FNCALL:
