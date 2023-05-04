@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 	// view_ast(node);
 
 	Env *env = new_env(NULL);
-	printf("{%s} = %ld\n", argv[1], eval(node, env)->val.intnum);
+	printf("%ld\n", eval(node, env)->val.intnum);
 
     return 0;
 }
