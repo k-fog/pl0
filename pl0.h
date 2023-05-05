@@ -6,20 +6,20 @@
 
 // tokenize
 typedef enum {
-    TK_IDENT,
+	TK_IDENT,
 	TK_OP,
-    TK_PUNCT,
-    TK_NUM,
-    TK_EOF,
+	TK_PUNCT,
+	TK_NUM,
+	TK_EOF,
 } TokenType;
 
 typedef struct Token Token;
 struct Token {
-    TokenType type;
-    char *str;
-    int len;
-    long val;
-    Token *next;
+	TokenType type;
+	char *str;
+	int len;
+	long val;
+	Token *next;
 };
 
 extern Token *current_token;
@@ -66,7 +66,7 @@ struct Node {
 
 	Node *condition;
 	Node *body;
-	
+
 	Node *next;
 
 	Node *name;
