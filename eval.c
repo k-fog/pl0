@@ -80,8 +80,11 @@ pVal *eval(Node *node, Env *env) {
 				return ret;
 			}
 		case ND_RET:
-			// TODO:fix
-			return eval(node->rhs, env);
+			{
+				pVal *ret = eval(node->rhs, env);
+				ret->type = P_RETINT;
+				return ret;
+			}
 		case ND_ASSG:
 			{
 				pVal *pv = eval(node->rhs, env);
@@ -93,8 +96,10 @@ pVal *eval(Node *node, Env *env) {
 			{
 				Env *inner = new_env(env);
 				node = node->body->next;
+				pVal *pv;
 				while (node->next != NULL) {
-					eval(node, inner);
+					pv = eval(node, inner);
+					if (pv->type == P_RETINT) return pv;
 					node = node->next;
 				}
 				return eval(node, inner);

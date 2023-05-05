@@ -86,6 +86,7 @@ void view_ast(Node *node);
 typedef enum {
 	P_INT,
 	P_FUNC,
+	P_RETINT,
 } pType;
 
 typedef struct pVal {
