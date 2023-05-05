@@ -30,5 +30,7 @@ assert 2 'begin x:=1; x:=2; return x; end.'
 assert 1 'begin x:=0; begin x:=1; end; return x; end.'
 assert 55 'begin x:=0; i:=0; while i<=10 do begin x:=x+i; i:=i+1; end; return x; end.'
 assert 2 'function f() return 2; return f().'
+assert 10 'function add(x,y) return x+y; return add(2,8).'
+assert 6 'function mul(x,y,z) return x*y*z; return mul(1,2,3).'
 
 echo OK!

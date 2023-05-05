@@ -96,23 +96,26 @@ static Node *const_decl() {
 static Node *func_decl() {
 	if (!eq(read(), "function")) exit(1);
 	Node *name = new_ident(read());
-	Node *args = new_node(ND_ARGS);	
-	Node *node = args->next;
+	Node *params = new_node(ND_PARAMS);	
+	params->body = new_node(ND_NULL);
+	Node *node = params->body;
 	if (!eq(read(), "(")) exit(1);
 	for (;;) {
 		if (eq(peek(), ")")) break;
 		node->next = new_ident(read());
 		node = node->next;
-		if (eq(peek(), ",")) continue;
+		if (eq(peek(), ",")) {
+			read();
+			continue;
+		}
 		else break;
 	}
 	if (!eq(read(), ")")) exit(1);
 	Node *body = block();
 	if (!eq(read(), ";")) exit(1);
-
 	node = new_node(ND_FNDEF);
 	node->name = name;
-	node->args = args;
+	node->params = params;
 	node->body = body;
 	return node;
 }
@@ -206,12 +209,26 @@ static Node *factor() {
 	if (eq_type(tok, TK_IDENT)) {
 		if (eq(peek(), "(")) {
 			read();
+			Node *args = new_node(ND_ARGS);	
+			args->body = new_node(ND_NULL);
+			Node *node = args->body;
+			for (;;) {
+				if (eq(peek(), ")")) break;
+				node->next = expr();
+				node = node->next;
+				if (eq(peek(), ",")) {
+					read();
+					continue;
+				}
+				else break;
+			}
 			if (!eq(read(), ")")) exit(1);
-			Node *node = new_node(ND_FNCALL);
+			node = new_node(ND_FNCALL);
 			node->name = new_ident(tok);
+			node->args = args;
 			return node;
 		}
-		return new_ident(tok);
+		else return new_ident(tok);
 	} else if (eq(tok, "-")) {
 		return new_binary(ND_SUB, new_num(0), factor());
 	} else if (eq_type(tok, TK_NUM)) {

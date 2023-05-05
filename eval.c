@@ -80,6 +80,7 @@ pVal *eval(Node *node, Env *env) {
 				return ret;
 			}
 		case ND_RET:
+			// TODO:fix
 			return eval(node->rhs, env);
 		case ND_ASSG:
 			{
@@ -105,8 +106,18 @@ pVal *eval(Node *node, Env *env) {
 				return pv;
 			}
 		case ND_FNCALL:
-			Env *fn_env = new_env(NULL);
-			return eval(get(env, node->name->str)->val.func->body, fn_env);
+			{
+				Env *fn_env = new_env(NULL);
+				Node *fn = get(env, node->name->str)->val.func;
+				Node *params = fn->params->body->next;
+				Node *args = node->args->body->next;
+				while (params != NULL) {
+					put(fn_env, params->str, eval(args, env));
+					params = params->next;
+					args = args->next;
+				}
+				return eval(fn->body, fn_env);
+			}
 	}
 	exit(1);
 }

@@ -52,6 +52,7 @@ typedef enum {
 	ND_BEGIN, // begin ... end
 	ND_FNDEF, // function
 	ND_ARGS,  // args
+	ND_PARAMS,// parameters
 	ND_FNCALL,// function call 
 	ND_BLOCK, // block
 	ND_NULL,  // null
@@ -70,6 +71,7 @@ struct Node {
 
 	Node *name;
 	Node *args;
+	Node *params;
 
 	long val;
 	char *str;
