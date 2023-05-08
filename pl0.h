@@ -53,6 +53,7 @@ typedef enum {
     ND_WRITELN,// writeln
     ND_ASSG,  // assignment
     ND_BEGIN, // begin ... end
+    ND_VARS,  // var
     ND_FNDEF, // function
     ND_ARGS,  // args
     ND_PARAMS,// parameters

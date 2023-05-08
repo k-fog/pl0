@@ -120,6 +120,15 @@ pVal *eval(Node *node, Env *env) {
                 put(global_env, node->name->str, pv);
                 return pv;
             }
+        case ND_VARS:
+            {
+               node = node->body->next;
+               while (node != NULL) {
+                   put(global_env, node->str, pInt(0));
+                   node = node->next;
+               }
+               return pInt(0);
+            }
         case ND_FNCALL:
             {
                 Env *fn_env = new_env(global_env);

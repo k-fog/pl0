@@ -44,5 +44,6 @@ end;
 return gcd(13*4, 13*9).'
 assert 20 'function a(x) return x; function b(x) return 2*a(x); return b(10).'
 assert "123"$'\n'"0" 'begin write 123; writeln; end.'
+assert 32 'var hoge; begin hoge:=32; return hoge; end.'
 
 echo OK!

@@ -97,7 +97,16 @@ static Node *block() {
 }
 
 static Node *var_decl() {
-    return NULL;
+    if (!eq(read(), "var")) exit(1);
+    Node *head = new_node(ND_VARS);
+    head->body = new_node(ND_NULL);
+    Node *node = head->body->next = new_ident(read());
+    while (eq(peek(), ",")) {
+        read();
+        node = node->next = new_ident(read());
+    }
+    if (!eq(read(), ";")) exit(1);
+    return head;
 }
 static Node *const_decl() {
     return NULL;
