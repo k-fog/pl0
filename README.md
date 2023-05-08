@@ -4,6 +4,7 @@ You can run a code by giving the program as a command line argument.
 This interpreter always outputs a return value without 'write' instruction.
 
 ## The syntax of PL/0' in eBNF:
+
 ```
 <program> ::= <block> '.'
 <block> ::=  ( <declaration> )* <statement>
@@ -69,3 +70,14 @@ end;
 
 return fib(N).
 ```
+
+## Future tasks
+
+既知の問題等。修正するかは未定。
+
+- 実行速度遅すぎ（おそらくメモリ確保に時間がかかっている）
+- メモリを確保した後、解放していない
+- for文
+- if文else節
+- 小数型・文字列型
+- エラー表示
