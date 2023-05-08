@@ -42,7 +42,7 @@ Token *tokenize(char *src) {
             src += 2;
             continue;
         }
-        if (strchr("+-*/=<>", *src)) {
+        if (strchr("+-*/=<>%", *src)) {
             cur = new_token(TK_OP, cur, src++, 1);
             continue;
         }

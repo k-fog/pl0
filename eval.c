@@ -62,6 +62,8 @@ pVal *eval(Node *node, Env *env) {
 			return pInt(eval(node->lhs, env)->val.intnum * eval(node->rhs, env)->val.intnum);
 		case ND_DIV:
 			return pInt(eval(node->lhs, env)->val.intnum / eval(node->rhs, env)->val.intnum);
+		case ND_MOD:
+			return pInt(eval(node->lhs, env)->val.intnum % eval(node->rhs, env)->val.intnum);
 		case ND_EQ:
 			return pInt(eval(node->lhs, env)->val.intnum == eval(node->rhs, env)->val.intnum);
 		case ND_NE:

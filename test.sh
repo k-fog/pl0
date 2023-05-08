@@ -33,5 +33,7 @@ assert 2 'function f() return 2; return f().'
 assert 10 'function add(x,y) return x+y; return add(2,8).'
 assert 6 'function mul(x,y,z) return x*y*z; return mul(1,2,3).'
 assert 120 'function fact(n) begin if n<=1 then return 1; return n*fact(n-1); end; return fact(5).'
+assert 6765 'function fib(n) begin if n<=1 then return n; return fib(n-1)+fib(n-2); end; return fib(20).'
+assert 13 'function gcd(a,b) begin if a=0 then return b; return gcd(b%a,a); end; return gcd(13*4, 13*9).'
 
 echo OK!

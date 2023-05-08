@@ -195,11 +195,14 @@ static Node *expr() {
 
 static Node *term() {
 	Node *node = factor();
-	while (eq(peek(), "*") || eq(peek(), "/")) {
-		if (eq(read(), "*"))
+	while (eq(peek(), "*") || eq(peek(), "/") || eq(peek(), "%")) {
+		Token *tok = read();
+		if (eq(tok, "*"))
 			node = new_binary(ND_MUL, node, factor());
-		else // "/"
+		else if(eq(tok, "/"))
 			node = new_binary(ND_DIV, node, factor());
+		else if(eq(tok, "%"))
+			node = new_binary(ND_MOD, node, factor());
 	}
 	return node;
 }
