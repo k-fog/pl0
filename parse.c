@@ -280,73 +280,8 @@ static Node *factor() {
 
 Node *parse(Token *tok) {
     current_token = tok;
-    // Node *node = condition();
     Node *node = program();
     if (!eq_type(current_token, TK_EOF)) exit(1);
     return node;
 }
 
-/*
-   static void print_node(Node *node) {
-   switch (node->type) {
-   case ND_NUM:
-   printf("number: {val: %ld}, ", node->val);
-   break;
-   case ND_ADD:
-   case ND_SUB:
-   case ND_MUL:
-   case ND_DIV:
-   case ND_EQ:
-   case ND_NE:
-   case ND_LT:
-   case ND_LE:
-   char *op;
-   if (node->type == ND_ADD) op = "+";
-   else if (node->type == ND_SUB) op = "-";
-   else if (node->type == ND_MUL) op = "*";
-   else if (node->type == ND_DIV) op = "/";
-   else if (node->type == ND_EQ) op = "==";
-   else if (node->type == ND_NE) op = "<>";
-   else if (node->type == ND_LT) op = "<";
-   else if (node->type == ND_LE) op = "<=";
-
-   printf("%s: {", op);
-   printf("lhs: {");
-   print_node(node->lhs);
-   printf("}, ");
-   printf("rhs: {");
-   print_node(node->rhs);
-   printf("}, ");
-   printf("}, ");
-   break;
-   case ND_ODD:
-   printf("odd: {lhs: null, rhs: {");
-   print_node(node->rhs);
-   printf("}, ");
-   break;
-   case ND_IF:
-   case ND_WHILE:
-   char *kw;
-   if (node->type == ND_IF) kw = "if";
-   else if (node->type == ND_WHILE) kw = "while";
-   printf("%s: {condition: {", kw);
-   print_node(node->condition);
-   printf("}, ");
-   printf("body: {");
-   print_node(node->body);
-   printf("}, ");
-   printf("}, ");
-   break;
-   }
-   return;
-   }
-   */
-
-/*
-   void view_ast(Node *node) {
-   printf("===== PARSED =====\n");
-   print_node(node);
-   printf("\n");
-   return;
-   }
-   */

@@ -25,12 +25,6 @@ pVal *pFunc(Node *node) {
     return pv;
 }
 
-static void decl_var(Env *env, char *key) {
-    Pair *p = new_pair(key, pInt(0));
-    add2map(env->var, p);
-    return;
-}
-
 static Pair *get_pair(Env *env, char *key) {
     Pair *ret = get_from_map(env->var, key);
     if (ret) return ret;
@@ -159,6 +153,7 @@ pVal *eval(Node *node, Env *env) {
                 }
                 return eval(fn->body, fn_env);
             }
+        default:
+            exit(1);
     }
-    exit(1);
 }
