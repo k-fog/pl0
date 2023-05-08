@@ -1,18 +1,28 @@
 #include "pl0.h"
 
 /*
- * program   ::= block "."
- * block     ::= [ "const" ident "=" number {"," ident "=" number} ";"]
- *               [ "var" ident {"," ident} ";"]
- *               { "procedure" ident ";" block ";" } statement
- * statement ::= [ ident ":=" expression | "call" ident |
- *               "begin" statement {";" statement } "end" |
- *               "if" condition "then" statement |
- *               "while" condition "do" statement ].
- * Condition ::= "odd" Expr | Expr ("="|"#"|"<"|"<="|">"|">=") Expr
- * Expr      ::= ["+"|"-"] Term { ("+"|"-") Term} 
- * Term      ::= Factor { (* | /) Factor }
- * Factor    ::= Ident | Number | "(" Expr ")"
+ * <program> ::= <block> '.'
+ * <block> ::=  ( <declaration> )* <statement>
+ * <declaration> ::= <const_decl> | <var_decl> | <func_decl>
+ * <const_decl> ::= 'const' <const_def> ( ',' <const_def> )* ';'
+ * <const_def> ::= ident '=' number
+ * <var_decl> ::= 'var' ident ( ',' ident )* ';'
+ * <func_decl> ::= 'function' ident '(' [ ident ( ',' ident )* ]  ')' <block> ';'
+ * <statement> ::= [ ident ':=' <expression>
+ *              | 'begin' <statement> ( ';' <statement> )* 'end'
+ *              | 'if' <condition> 'then' <statement>
+ *              | 'while' <condition> 'do' <statement>
+ *              | 'return' <expression>
+ *              | 'write' <expression>
+ *              | 'writeln' ]
+ * <condition> ::= 'odd' <expression>
+ *              | <expression> ( '=' | '<>' | '<" | '<=' | '>' | '>=' ) <expression>
+ * <expression> ::= [ ( '-' | '+' ) ] <term> ( ( '-' | '+' ) <term> )*
+ * <term> ::= <factor> ( ( '*' | '/' ) <factor> )*
+ * <factor> ::= ident '(' [ <expression> ( ',' <expression> )* ] ')'
+ *              | number
+ *              | ident
+ *              | '(' <expression> ')'
  */
 
 static Node *program();
