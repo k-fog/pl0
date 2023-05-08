@@ -124,7 +124,7 @@ pVal *eval(Node *node, Env *env) {
             {
                node = node->body->next;
                while (node != NULL) {
-                   put(global_env, node->str, pInt(0));
+                   put(env, node->str, pInt(0));
                    node = node->next;
                }
                return pInt(0);
