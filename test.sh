@@ -1,15 +1,15 @@
 #!/bin/bash
 
 function assert() {
-	expected=$1
-	input=$2
-	output=`./pl0 "$input"`
-	if [ "$output" = "$expected" ]; then
-		echo "{$input} => $output"
-	else
-		echo "{$input}: expected $expected, but got $output"
-		exit 1
-	fi
+    expected=$1
+    input=$2
+    output=`./pl0 "$input"`
+    if [ "$output" = "$expected" ]; then
+        echo "{$input} => $output"
+    else
+        echo "{$input}: expected $expected, but got $output"
+        exit 1
+    fi
 }
 
 assert 3 'return 1 + 2.'
@@ -38,8 +38,8 @@ assert 6765 'function fib(n) begin if n<=1 then return n; return fib(n-1)+fib(n-
 assert 13 '
 function gcd(a,b)
 begin
-	if a = 0 then return b;
-	return gcd(b % a, a);
+if a = 0 then return b;
+    return gcd(b % a, a);
 end;
 return gcd(13*4, 13*9).'
 assert 20 'function a(x) return x; function b(x) return 2*a(x); return b(10).'

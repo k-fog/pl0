@@ -6,20 +6,20 @@
 
 // tokenize
 typedef enum {
-	TK_IDENT,
-	TK_OP,
-	TK_PUNCT,
-	TK_NUM,
-	TK_EOF,
+    TK_IDENT,
+    TK_OP,
+    TK_PUNCT,
+    TK_NUM,
+    TK_EOF,
 } TokenType;
 
 typedef struct Token Token;
 struct Token {
-	TokenType type;
-	char *str;
-	int len;
-	long val;
-	Token *next;
+    TokenType type;
+    char *str;
+    int len;
+    long val;
+    Token *next;
 };
 
 extern Token *current_token;
@@ -34,50 +34,50 @@ Token *read();
 
 // parse
 typedef enum {
-	ND_IDENT, // identifier
-	ND_NUM,   // number
-	ND_ADD,   // +
-	ND_SUB,   // -
-	ND_MUL,   // *
-	ND_DIV,   // /
-	ND_MOD,   // %
-	ND_EQ,	  // =
-	ND_LT,    // <
-	ND_LE,    // <=
-	ND_NE,    // <>
-	ND_ODD,   // odd
-	ND_IF,    // if statement
-	ND_WHILE, // while statement
-	ND_RET,   // return
-	ND_WRITE, // write
-	ND_WRITELN,// writeln
-	ND_ASSG,  // assignment
-	ND_BEGIN, // begin ... end
-	ND_FNDEF, // function
-	ND_ARGS,  // args
-	ND_PARAMS,// parameters
-	ND_FNCALL,// function call 
-	ND_BLOCK, // block
-	ND_NULL,  // null
+    ND_IDENT, // identifier
+    ND_NUM,   // number
+    ND_ADD,   // +
+    ND_SUB,   // -
+    ND_MUL,   // *
+    ND_DIV,   // /
+    ND_MOD,   // %
+    ND_EQ,	  // =
+    ND_LT,    // <
+    ND_LE,    // <=
+    ND_NE,    // <>
+    ND_ODD,   // odd
+    ND_IF,    // if statement
+    ND_WHILE, // while statement
+    ND_RET,   // return
+    ND_WRITE, // write
+    ND_WRITELN,// writeln
+    ND_ASSG,  // assignment
+    ND_BEGIN, // begin ... end
+    ND_FNDEF, // function
+    ND_ARGS,  // args
+    ND_PARAMS,// parameters
+    ND_FNCALL,// function call 
+    ND_BLOCK, // block
+    ND_NULL,  // null
 } NodeType;
 
 typedef struct Node Node;
 struct Node {
-	NodeType type;
-	Node *lhs;
-	Node *rhs;
+    NodeType type;
+    Node *lhs;
+    Node *rhs;
 
-	Node *condition;
-	Node *body;
+    Node *condition;
+    Node *body;
 
-	Node *next;
+    Node *next;
 
-	Node *name;
-	Node *args;
-	Node *params;
+    Node *name;
+    Node *args;
+    Node *params;
 
-	long val;
-	char *str;
+    long val;
+    char *str;
 };
 
 Node *parse(Token *tok);
@@ -87,30 +87,30 @@ void view_ast(Node *node);
 // data type & hashmap
 
 typedef enum {
-	P_INT,
-	P_FUNC,
-	P_RETINT,
+    P_INT,
+    P_FUNC,
+    P_RETINT,
 } pType;
 
 typedef struct pVal {
-	pType type;
-	union {
-		long int intnum;
-		Node *func;
-	} val;
+    pType type;
+    union {
+        long int intnum;
+        Node *func;
+    } val;
 } pVal;
 
 pVal *pInt(long int x);
 pVal *pFunc(Node *func);
 
 typedef struct {
-	char *key;
-	pVal *val;
+    char *key;
+    pVal *val;
 } Pair;
 
 typedef struct {
-	int size;
-	Pair **data;
+    int size;
+    Pair **data;
 } Hashmap;
 
 Hashmap *new_hashmap(int size);
@@ -125,8 +125,8 @@ bool haskey(Hashmap *map, char *key);
 #define HASHMAX 89
 typedef struct _Env Env;
 struct _Env {
-	Env *outer;
-	Hashmap *var;
+    Env *outer;
+    Hashmap *var;
 };
 
 Env *new_env(Env *outer);
