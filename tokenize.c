@@ -75,30 +75,6 @@ char *to_string(char *s, int len) {
     return t;
 }
 
-void view_tokens(Token *tok) {
-    printf("===== TOKENIZED =====\n");
-    for (;;) {
-        switch (tok->type) {
-            case TK_IDENT:
-                printf("identifier: {str: \"%s\", len: %d}\n", to_string(tok->str, tok->len), tok->len);
-                break;
-            case TK_OP:
-                printf("operator: {str: \"%s\", len: %d}\n", to_string(tok->str, tok->len), tok->len);
-                break;
-            case TK_PUNCT:
-                printf("punctuator: {str: \"%s\", len: %d}\n", to_string(tok->str, tok->len), tok->len);
-                break;
-            case TK_NUM:
-                printf("num: {val: %ld, len: %d}\n", tok->val, tok->len);
-                break;
-            case TK_EOF:
-                printf("EOF\n\n");
-                return;
-        }
-        tok = tok->next;
-    }
-}
-
 Token *peek() {
     return current_token;
 }
