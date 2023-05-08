@@ -109,7 +109,18 @@ static Node *var_decl() {
     return head;
 }
 static Node *const_decl() {
-    return NULL;
+    if (!eq(read(), "const")) exit(1);
+    Node *head = new_node(ND_CONST);
+    Node *node = head->body = new_node(ND_NULL);
+    Token *tok;
+    do {
+        tok = read();
+        if (!eq(read(), "=")) exit(1);
+        node->next = new_binary(ND_CONSTDEF, new_ident(tok), new_num(read()->val));
+        node = node->next;
+    } while (eq(tok = read(), ","));
+    if (!eq(tok, ";")) exit(1);
+    return head;
 }
 
 static Node *func_decl() {

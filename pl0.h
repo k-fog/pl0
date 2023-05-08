@@ -34,32 +34,34 @@ Token *read();
 
 // parse
 typedef enum {
-    ND_IDENT, // identifier
-    ND_NUM,   // number
-    ND_ADD,   // +
-    ND_SUB,   // -
-    ND_MUL,   // *
-    ND_DIV,   // /
-    ND_MOD,   // %
-    ND_EQ,	  // =
-    ND_LT,    // <
-    ND_LE,    // <=
-    ND_NE,    // <>
-    ND_ODD,   // odd
-    ND_IF,    // if statement
-    ND_WHILE, // while statement
-    ND_RET,   // return
-    ND_WRITE, // write
-    ND_WRITELN,// writeln
-    ND_ASSG,  // assignment
-    ND_BEGIN, // begin ... end
-    ND_VARS,  // var
-    ND_FNDEF, // function
-    ND_ARGS,  // args
-    ND_PARAMS,// parameters
-    ND_FNCALL,// function call 
-    ND_BLOCK, // block
-    ND_NULL,  // null
+    ND_IDENT,     // identifier
+    ND_NUM,       // number
+    ND_ADD,       // +
+    ND_SUB,       // -
+    ND_MUL,       // *
+    ND_DIV,       // /
+    ND_MOD,       // %
+    ND_EQ,	      // =
+    ND_LT,        // <
+    ND_LE,        // <=
+    ND_NE,        // <>
+    ND_ODD,       // odd
+    ND_IF,        // if statement
+    ND_WHILE,     // while statement
+    ND_RET,       // return
+    ND_WRITE,     // write
+    ND_WRITELN,   // writeln
+    ND_ASSG,      // assignment
+    ND_BEGIN,     // begin ... end
+    ND_VARS,      // var
+    ND_CONST,     // const
+    ND_CONSTDEF,  // const
+    ND_FNDEF,     // function
+    ND_ARGS,      // args
+    ND_PARAMS,    // parameters
+    ND_FNCALL,    // function call 
+    ND_BLOCK,     // block
+    ND_NULL,      // null
 } NodeType;
 
 typedef struct Node Node;
@@ -99,6 +101,7 @@ typedef struct pVal {
         long int intnum;
         Node *func;
     } val;
+    bool is_const;
 } pVal;
 
 pVal *pInt(long int x);

@@ -13,6 +13,7 @@ pVal *pInt(long int x) {
     pVal *pv = calloc(1, sizeof(pVal));
     pv->type = P_INT;
     pv->val.intnum = x;
+    pv->is_const = false;
     return pv;
 }
 
@@ -20,6 +21,7 @@ pVal *pFunc(Node *node) {
     pVal *pv = calloc(1, sizeof(pVal));
     pv->type = P_FUNC;
     pv->val.func = node;
+    pv->is_const = true;
     return pv;
 }
 
@@ -98,6 +100,7 @@ pVal *eval(Node *node, Env *env) {
         case ND_ASSG:
             {
                 pVal *pv = eval(node->rhs, env);
+                if (get(env, node->lhs->str)->is_const == true) exit(1);
                 put(env, node->lhs->str, pv);
                 return pv;
             }
@@ -122,12 +125,26 @@ pVal *eval(Node *node, Env *env) {
             }
         case ND_VARS:
             {
-               node = node->body->next;
-               while (node != NULL) {
-                   put(env, node->str, pInt(0));
-                   node = node->next;
-               }
-               return pInt(0);
+                node = node->body->next;
+                while (node != NULL) {
+                    put(env, node->str, pInt(0));
+                    node = node->next;
+                }
+                return pInt(0);
+            }
+        case ND_CONST:
+            node = node->body->next;
+            while (node != NULL) {
+                eval(node, env);
+                node = node->next;
+            }
+            return pInt(0);
+        case ND_CONSTDEF:
+            {
+                pVal *pv = pInt(node->rhs->val);
+                pv->is_const = true;
+                put(env, node->lhs->str, pv);
+                return pInt(0);
             }
         case ND_FNCALL:
             {
