@@ -1,5 +1,7 @@
 #include "pl0.h"
 
+Env *global_env;
+
 Env *new_env(Env *outer) {
 	Env *env = calloc(1, sizeof(Env));
 	env->outer = outer;
@@ -30,8 +32,8 @@ static void decl_var(Env *env, char *key) {
 static Pair *get_pair(Env *env, char *key) {
 	Pair *ret = get_from_map(env->var, key);
 	if (ret) return ret;
-	else if(!env->outer) return NULL;
-	else return get_from_map(env->outer->var, key);
+	else if (env->outer == NULL) return NULL;
+	else return get_pair(env->outer, key);
 }
 
 static pVal *get(Env *env, char *key) {
@@ -39,10 +41,10 @@ static pVal *get(Env *env, char *key) {
 }
 
 static void put(Env *env, char *key, pVal *val) {
-	Pair *np = new_pair(key, val);
-	Pair *op = get_pair(env, key);
-	if (op) op->val = np->val;
-	else add2map(env->var, np);
+	Pair *new = new_pair(key, val);
+	Pair *old = get_pair(env, key);
+	if (old) old->val = new->val;
+	else add2map(env->var, new);
 	return;
 }
 
@@ -107,13 +109,13 @@ pVal *eval(Node *node, Env *env) {
 		case ND_FNDEF:
 			{
 				pVal *pv = pFunc(node);
-				put(env, node->name->str, pv);
+				put(global_env, node->name->str, pv);
 				return pv;
 			}
 		case ND_FNCALL:
 			{
-				Env *fn_env = new_env(NULL);
-				Node *fn = get(env, node->name->str)->val.func;
+				Env *fn_env = new_env(global_env);
+				Node *fn = get(global_env, node->name->str)->val.func;
 				Node *params = fn->params->body->next;
 				Node *args = node->args->body->next;
 				while (params != NULL) {

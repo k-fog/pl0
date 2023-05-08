@@ -128,3 +128,5 @@ struct _Env {
 
 Env *new_env(Env *outer);
 pVal *eval(Node *node, Env *env);
+
+extern Env *global_env;
