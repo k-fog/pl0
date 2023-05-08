@@ -89,6 +89,12 @@ pVal *eval(Node *node, Env *env) {
 				ret->type = P_RETINT;
 				return ret;
 			}
+		case ND_WRITE:
+			printf("%ld", eval(node->rhs, env)->val.intnum);
+			return pInt(0);
+		case ND_WRITELN:
+			printf("\n");
+			return pInt(0);
 		case ND_ASSG:
 			{
 				pVal *pv = eval(node->rhs, env);

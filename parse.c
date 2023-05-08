@@ -157,6 +157,10 @@ static Node *stmt() {
 		node->body = stmt();
 	} else if (eq(tok, "return")) {
 		node = new_unary(ND_RET, expr());
+	} else if (eq(tok, "write")) {
+		node = new_unary(ND_WRITE, expr());
+	} else if (eq(tok, "writeln")) {
+		node = new_node(ND_WRITELN);
 	} else {
 		node = new_ident(tok);
 		if (!eq(read(), ":=")) exit(1);

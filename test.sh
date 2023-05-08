@@ -24,6 +24,7 @@ assert 2 'return (1-(1-2)).'
 assert 0 'return (((0))).'
 assert 1 'return - -1.'
 assert 1 'if 1=1 then return 1.'
+assert 0 'if odd 1 then return 0.'
 assert 1 'begin x:=1; return x; end.'
 assert 3 'begin x:=1; y:=2; return x+y; end.'
 assert 2 'begin x:=1; x:=2; return x; end.'
@@ -42,5 +43,6 @@ begin
 end;
 return gcd(13*4, 13*9).'
 assert 20 'function a(x) return x; function b(x) return 2*a(x); return b(10).'
+assert "123"$'\n'"0" 'begin write 123; writeln; end.'
 
 echo OK!

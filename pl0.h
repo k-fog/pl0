@@ -49,6 +49,8 @@ typedef enum {
 	ND_IF,    // if statement
 	ND_WHILE, // while statement
 	ND_RET,   // return
+	ND_WRITE, // write
+	ND_WRITELN,// writeln
 	ND_ASSG,  // assignment
 	ND_BEGIN, // begin ... end
 	ND_FNDEF, // function
