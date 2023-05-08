@@ -122,7 +122,7 @@ bool haskey(Hashmap *map, char *key);
 
 
 // eval
-#define HASHMAX 89
+#define HASHMAX 23
 typedef struct _Env Env;
 struct _Env {
     Env *outer;
