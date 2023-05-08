@@ -1,6 +1,7 @@
 # pl0
-This is PL/0' interpreter.
+This is a PL/0' interpreter.
 You can run a code by giving the program as a command line argument. 
+This interpreter always outputs a return value without 'write' instruction.
 
 ## The syntax of PL/0' in eBNF:
 ```
@@ -21,7 +22,7 @@ You can run a code by giving the program as a command line argument.
 <condition> ::= 'odd' <expression>
              | <expression> ( '=' | '<>' | '<" | '<=' | '>' | '>=' ) <expression>
 <expression> ::= [ ( '-' | '+' ) ] <term> ( ( '-' | '+' ) <term> )*
-<term> ::= <factor> ( ( '*' | '/' ) <factor> )*
+<term> ::= <factor> ( ( '*' | '/' | '%' ) <factor> )*
 <factor> ::= ident '(' [ <expression> ( ',' <expression> )* ] ')'
              | number
              | ident
