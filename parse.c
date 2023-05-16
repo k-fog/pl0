@@ -280,7 +280,7 @@ static Node *factor() {
 
 Node *parse(Token *tok) {
     current_token = tok;
-    Node *node = expr();
+    Node *node = condition();
     if (!eq_type(current_token, TK_EOF)) exit(1);
     return node;
 }

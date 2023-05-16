@@ -4,7 +4,7 @@ function assert() {
     expected=$1
     input=$2
     ./pl0 "$input" > tmp.s
-    clang -o tmp tmp.s
+    cc -o tmp tmp.s
     ./tmp
     output="$?"
     if [ "$output" = "$expected" ]; then
@@ -15,10 +15,21 @@ function assert() {
     fi
 }
 
-assert 3 '1 + 2'
-assert 10 '2*5'
-assert 5 '50/10'
-assert 6 '(5-2)*2'
+# assert 3 '1 + 2'
+# assert 10 '2*5'
+# assert 5 '50/10'
+# assert 6 '(5-2)*2'
+assert 1 '1=1'
+assert 1 '1<2'
+assert 1 '1<=1'
+assert 1 '1>0'
+assert 1 '10>=8'
+assert 0 '1<>1'
+assert 0 '1>2'
+assert 0 '1<0'
+assert 0 '10<=8'
+assert 0 '8>=10'
+
 # assert 3 'return 1 + 2.'
 # assert 3 'return 1 * 3.'
 # assert 7 'return 1 + 2 * 3.'
