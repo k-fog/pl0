@@ -8,8 +8,7 @@ int main(int argc, char *argv[]) {
 
     Token *tok = tokenize(argv[1]);
     Node *node = parse(tok);
-    global_env = new_env(NULL);
-    printf("%ld\n", eval(node, global_env)->val.intnum);
+    codegen(node);
 
     return 0;
 }

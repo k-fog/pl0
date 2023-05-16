@@ -18,7 +18,7 @@ struct Token {
     TokenType type;
     char *str;
     int len;
-    long val;
+    int val;
     Token *next;
 };
 
@@ -79,7 +79,7 @@ struct Node {
     Node *args;
     Node *params;
 
-    long val;
+    int val;
     char *str;
 };
 
@@ -98,13 +98,13 @@ typedef enum {
 typedef struct pVal {
     pType type;
     union {
-        long int intnum;
+        int intnum;
         Node *func;
     } val;
     bool is_const;
 } pVal;
 
-pVal *pInt(long int x);
+pVal *pInt(int x);
 pVal *pFunc(Node *func);
 
 typedef struct {

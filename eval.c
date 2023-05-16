@@ -9,7 +9,7 @@ Env *new_env(Env *outer) {
     return env;
 }
 
-pVal *pInt(long int x) {
+pVal *pInt(int x) {
     pVal *pv = calloc(1, sizeof(pVal));
     pv->type = P_INT;
     pv->val.intnum = x;
@@ -86,7 +86,7 @@ pVal *eval(Node *node, Env *env) {
                 return ret;
             }
         case ND_WRITE:
-            printf("%ld", eval(node->rhs, env)->val.intnum);
+            printf("%d", eval(node->rhs, env)->val.intnum);
             return pInt(0);
         case ND_WRITELN:
             printf("\n");
