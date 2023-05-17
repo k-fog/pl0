@@ -49,8 +49,10 @@ static void gen(Node *node) {
             gen(node->condition);
             printf("  pop rax\n");
             printf("  cmp rax, 0\n");
-            if (node->els) printf("  je .L.els.%05d\n", label_id);
-            else printf("  je .L.end.%05d\n", label_id);
+            if (node->els)
+                printf("  je .L.els.%05d\n", label_id);
+            else
+                printf("  je .L.end.%05d\n", label_id);
             gen(node->body);
             if (node->els) {
                 printf(".L.els.%05d:\n", label_id);
@@ -59,16 +61,27 @@ static void gen(Node *node) {
             printf(".L.end.%05d:\n", label_id);
             label_id++;
             return;
+        case ND_WHILE:
+            printf(".L.bgn.%05d:\n", label_id);
+            gen(node->condition);
+            printf("  pop rax\n");
+            printf("  cmp rax, 0\n");
+            printf("  je .L.end.%05d\n", label_id);
+            gen(node->body);
+            printf("  jmp .L.bgn.%05d\n", label_id);
+            printf(".L.end.%05d:\n", label_id);
+            label_id++;
+            return;
         case ND_BLOCK:
+        case ND_BEGIN:
+            if (node->body) printf("hey!!\n");
             node = node->body->next;
             while (node) {
                 gen(node->body);
-                printf(" pop rax\n");
+                printf("  pop rax\n");
                 node = node->next;
             }
             return;
-        default:
-            break;
     }
 
     gen(node->lhs);

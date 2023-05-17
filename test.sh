@@ -29,6 +29,7 @@ assert 0 'if 1>2 then return 1 else return 0'
 assert 0 'if 1<0 then return 1 else return 0'
 assert 0 'if 10<=8 then return 1 else return 0'
 assert 0 'if 8>=10 then return 1 else return 0'
+assert 5 'const x = 5; return x.'
 
 # assert 3 'return 1 + 2.'
 # assert 3 'return 1 * 3.'
