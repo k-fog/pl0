@@ -299,6 +299,8 @@ static Node *factor() {
 
 Node *parse(Token *tok) {
     current_token = tok;
+    locals = calloc(1, sizeof(LVar));
+    locals->offset = -8;
     Node *node = program();
     if (!eq_type(current_token, TK_EOF)) exit(1);
     return node;

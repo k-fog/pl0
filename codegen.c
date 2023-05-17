@@ -10,7 +10,7 @@ LVar *find_lvar(Token *tok) {
 }
 
 static void gen_lval(Node *node) {
-    if (node->type != ND_LVAR) exit(1);
+    // if (node->type != ND_LVAR) exit(1);
     printf("  mov rax, rbp\n");
     printf("  sub rax, %d\n", node->offset);
     printf("  push rax\n");
@@ -69,6 +69,12 @@ static void gen(Node *node) {
             printf("  jmp .L.bgn.%05d\n", label_id);
             printf(".L.end.%05d:\n", label_id);
             label_id++;
+            return;
+        case ND_ODD:
+            gen(node->rhs);
+            printf("  pop rax\n");
+            printf("  and rax, 1\n");
+            printf("  push rax\n");
             return;
         case ND_BLOCK:
         case ND_BEGIN:
