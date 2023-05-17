@@ -170,6 +170,10 @@ static Node *stmt() {
         node->condition = condition();
         if (!eq(read(), "then")) exit(1);
         node->body = stmt();
+        if (eq(peek(), "else")) {
+            read();
+            node->els = stmt();
+        }
     } else if (eq(tok, "while")) {
         node = new_node(ND_WHILE);
         node->condition = condition();

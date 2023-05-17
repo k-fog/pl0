@@ -2,6 +2,8 @@
 
 LVar *locals;
 
+static int label_id = 0;
+
 LVar *find_lvar(Token *tok) {
     for (LVar *v = locals; v; v = v->next)
         if (v->len == tok->len && !memcmp(tok->str, v->name, v->len))
@@ -42,6 +44,28 @@ static void gen(Node *node) {
             printf("  mov rsp, rbp\n");
             printf("  pop rbp\n");
             printf("  ret\n");
+            return;
+        case ND_IF:
+            gen(node->condition);
+            printf("  pop rax\n");
+            printf("  cmp rax, 0\n");
+            if (node->els) printf("  je .L.els.%05d\n", label_id);
+            else printf("  je .L.end.%05d\n", label_id);
+            gen(node->body);
+            if (node->els) {
+                printf(".L.els.%05d:\n", label_id);
+                gen(node->els);
+            }
+            printf(".L.end.%05d:\n", label_id);
+            label_id++;
+            return;
+        case ND_BLOCK:
+            node = node->body->next;
+            while (node) {
+                gen(node->body);
+                printf(" pop rax\n");
+                node = node->next;
+            }
             return;
         default:
             break;
