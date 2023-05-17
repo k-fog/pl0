@@ -25,6 +25,8 @@
  *              | '(' <expression> ')'
  */
 
+LVar *locals;
+
 static Node *program();
 static Node *block();
 static Node *var_decl();

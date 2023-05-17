@@ -1,7 +1,5 @@
 #include "pl0.h"
 
-LVar *locals;
-
 static int label_id = 0;
 
 LVar *find_lvar(Token *tok) {
@@ -74,10 +72,9 @@ static void gen(Node *node) {
             return;
         case ND_BLOCK:
         case ND_BEGIN:
-            if (node->body) printf("hey!!\n");
             node = node->body->next;
             while (node) {
-                gen(node->body);
+                gen(node);
                 printf("  pop rax\n");
                 node = node->next;
             }
@@ -102,6 +99,11 @@ static void gen(Node *node) {
         case ND_DIV:
             printf("  cqo\n");
             printf("  idiv rdi\n");
+            break;
+        case ND_MOD:
+            printf("  cqo\n");
+            printf("  idiv rdi\n");
+            printf("  mov rax, rdx\n");
             break;
         case ND_EQ:
             printf("  cmp rax, rdi\n");
@@ -136,9 +138,5 @@ void codegen(Node *node) {
     printf("  push rbp\n");
     printf("  mov rbp, rsp\n");
     gen(node);
-    printf("  pop rax\n");
-    printf("  mov rsp, rbp\n");
-    printf("  pop rbp\n");
-    printf("  ret\n");
     return;
 }
