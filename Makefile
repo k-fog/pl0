@@ -11,6 +11,6 @@ test: pl0
 	./test.sh
 
 clean:
-	rm -f *.o *~
+	rm -f *.o *~ tmp*
 
 .PHONY: test clean

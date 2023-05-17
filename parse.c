@@ -264,8 +264,21 @@ static Node *factor() {
             node->name = new_ident(tok);
             node->args = args;
             return node;
+        } else {
+            Node *node = new_node(ND_LVAR);
+            LVar *lvar = find_lvar(tok);
+            if (lvar) node->offset = lvar->offset;
+            else {
+                lvar = calloc(1, sizeof(LVar));
+                lvar->next = locals;
+                lvar->name = tok->str;
+                lvar->len = tok->len;
+                lvar->offset = locals->offset + 8;
+                node->offset = lvar->offset;
+                locals = lvar;
+            }
+            return node;
         }
-        else return new_ident(tok);
     } else if (eq(tok, "-")) {
         return new_binary(ND_SUB, new_num(0), factor());
     } else if (eq_type(tok, TK_NUM)) {
@@ -280,7 +293,7 @@ static Node *factor() {
 
 Node *parse(Token *tok) {
     current_token = tok;
-    Node *node = condition();
+    Node *node = stmt();
     if (!eq_type(current_token, TK_EOF)) exit(1);
     return node;
 }

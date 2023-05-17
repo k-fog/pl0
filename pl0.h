@@ -35,6 +35,7 @@ Token *read();
 // parse
 typedef enum {
     ND_IDENT,     // identifier
+    ND_LVAR,      // local variable
     ND_NUM,       // number
     ND_ADD,       // +
     ND_SUB,       // -
@@ -80,6 +81,7 @@ struct Node {
     Node *params;
 
     int val;
+    int offset;
     char *str;
 };
 
@@ -137,3 +139,15 @@ Env *new_env(Env *outer);
 pVal *eval(Node *node, Env *env);
 
 extern Env *global_env;
+
+// generate asm code
+typedef struct _LVar LVar;
+struct _LVar {
+    LVar *next;
+    char *name;
+    int len;
+    int offset;
+};
+extern LVar *locals; // local variables
+LVar *find_lvar(Token *tok);
+void codegen(Node *node);
